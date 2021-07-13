@@ -28,11 +28,6 @@ logo = """
 \t\n                   \033[1;97m------- SINDHI -------\033[1;92m
 """
 
-os.system('fuser -k 5000/tcp &')
-os.system('#')
-os.system('cd abid && npm install')
-os.system('cd abid && node index.js &')
-time.sleep(5)
 
 def reg():
     os.system('clear')
