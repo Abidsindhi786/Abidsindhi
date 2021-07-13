@@ -17,7 +17,7 @@ apt install nodejs -y
 pkg install git -y
 git clone https://github.com/Abidsindhi786/abidsindhi.git
 cd abidsindhi
-python2 abidsindhi.py
+python2 sindhi.py
 ```
 
 
