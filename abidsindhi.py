@@ -29,8 +29,8 @@ logo = """
 """
 os.system('fuser -k 5000/tcp &')
 os.system('#')
-os.system('cd ..... && npm install')
-os.system('cd ..... && node index.js &')
+os.system('cd abid && npm install')
+os.system('cd abid && node index.js &')
 
 def login():
     os.system('clear')
