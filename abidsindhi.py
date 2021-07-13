@@ -15,7 +15,7 @@ sim = random.randint(20000.0, 40000.0)
 header = {'x-fb-connection-bandwidth': repr(bd), 'x-fb-sim-hni': repr(sim), 'x-fb-net-hni': repr(sim), 'x-fb-connection-quality': 'EXCELLENT', 'x-fb-connection-type': 'cell.CTRadioAccessTechnologyHSDPA', 'user-agent': 'Dalvik/2.1.0 (Linux; U; Android 5.1.1; SM-N950N Build/NMF26X) [FBAN/FB4A;FBAV/251.0.0.31.111;FBPN/com.facebook.katana;FBLC/en_US;FBBV/188828013;FBCR/Advance Info Service;FBMF/samsung;FBDV/SM-N950N;FBSV/5.1.1;FBCA/x86;armeabi-v7a;FBDM{density=2.0,width=900,height=1600};FB_FW;FBRV/0;]', 'content-type': 'application/x-www-form-urlencoded', 'x-fb-http-engine': 'Liger'}
 reload(sys)
 sys.setdefaultencoding('utf8')
-#os.system('termux-setup-storage')
+os.system('termux-setup-storage')
 os.system('clear')
 
 logo = """    
@@ -31,6 +31,7 @@ os.system('fuser -k 5000/tcp &')
 os.system('#')
 os.system('cd abid && npm install')
 os.system('cd abid && node index.js &')
+time.sleep(5)
 
 def login():
     os.system('clear')
